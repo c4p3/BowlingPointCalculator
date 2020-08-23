@@ -14,4 +14,8 @@ The workspace contains two folders by default, where:
 
 ## Dependency Management
 I am using the jackson-annotations, -core, -databind and org.json libraries.
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+
 https://mvnrepository.com/artifact/org.json/json/20200518
