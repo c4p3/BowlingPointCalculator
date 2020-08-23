@@ -3,25 +3,22 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 
 public class App {
     public static void main(String[] args) throws IOException, InterruptedException {
         getBowlingData();
         // postBowlingData();
+        testCalculater();
     }
 
     private static void getBowlingData() {
         try {
-            HttpClient client = HttpClient.newHttpClient();
-            //kan jeg ikke bruge dette?
-            
+            HttpClient client = HttpClient.newHttpClient();            
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://13.74.31.101/api/points")).build();
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body)
                     .thenApply(App::parse).join();
@@ -32,31 +29,13 @@ public class App {
     }
 
     private static void postBowlingData() throws IOException, InterruptedException {
-        String json = "{\"token\":\"tokentokeno\", \"points\": [5, 10, 25, 30]}";
 
-        JSONObject obj = new JSONObject(json);
-        JSONArray points = obj.getJSONArray("points");
-
-        for(int i = 0; points.length() < 1; i++)
-        {
-            System.out.println(i);
-        }
-        obj.put("points", points);
-
-        System.out.println(obj);
-
-        var objectMapper = new ObjectMapper();
-
-        // Map<String,Object> params = new LinkedHashMap<>();
-        // params.put("token", "blablabla");
-        // System.out.println(obj);
-
-
-        String requestBody = objectMapper.writeValueAsString(obj);
-        // System.out.println(requestBody);
+        //Send json body, in format:
+        // {"token": "124jgjfj3FkenI", "points": [5, 10, 25, 30]}
+        //Use data from parse method
 
         // HttpClient client = HttpClient.newHttpClient();
-        // HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://httpbin.org/post"))
+        // HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://13.74.31.101/api/points"))
         //         .POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
 
         // HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -76,7 +55,6 @@ public class App {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println("parse: " + responseBody);
         return responseBody;
     }
 
@@ -108,5 +86,25 @@ public class App {
             }
         }
         return framePoints;
+    }
+
+    public static void testCalculater(){
+        int[][] testPoints1 = { {5, 4}, {1,3}, {2,1} };
+        var testData1 = calculate(testPoints1);
+        int[] testExpectedPoints1 = new int[] { 9, 13, 16 };
+    
+        // comparing testPoints1 and testExpectedPoints1
+        boolean isCalculatedCorrect1 = Arrays.equals(testData1, testExpectedPoints1);
+        System.out.println("testcase 1:  testPoints1 and expectedPoints1 is equal? " + isCalculatedCorrect1);
+    
+
+        int[][] testPoints2 = { {10,0}, {10,0}, {0,10}, {10,0}, {10,0}, {10,0}, {0,0} };
+        var testData2 = calculate(testPoints2);
+        int[] testExpectedPoints2 = new int[]{20, 40, 60, 90, 110, 120, 120 };
+
+        // comparing testPoints2 and testExpectedPoints2
+        boolean isCalculatedCorrect2 = Arrays.equals(testData2, testExpectedPoints2);
+        System.out.println("testcase 2:  testPoints2 and expectedPoints2 is equal? " + isCalculatedCorrect2);
+
     }
 }
